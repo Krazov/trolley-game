@@ -1,0 +1,40 @@
+@import '_reset';
+
+:root {
+    font-size: 10px;
+}
+
+body {
+    background-color: white;
+    font-family: Calibri, sans-serif;
+    font-size: 2rem;
+}
+
+.trolley {
+    &-header {
+        background-color: darkcyan;
+        color: gainsboro;
+        font-family: Cambria, serif;
+        font-size: 3rem;
+        padding: 3rem;
+        text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+    }
+
+    &-messages {
+        line-height: 1.2em;
+        padding: 3rem;
+    }
+
+    &-choice {
+        bottom: -10rem;
+        left: 0;
+        position: fixed;
+        right: 0;
+        text-align: center;
+        transition: bottom 250ms ease;
+
+        &.is-active {
+            bottom: 2rem;
+        }
+    }
+}
