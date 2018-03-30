@@ -17,8 +17,8 @@ This game is rather for fun but with growing AI (i.e. autonomous cars) trolley p
 
 ## Credits
 
-The project is rewrite from [TrolleyGame](https://github.com/InALunch/TrolleyGame) by Linchuan Zhang. With his permission. When I decided to learn ClojureScript I needed some interesting project that is not to-do application. (I had done those already three times.)
+The project is rewrite from [TrolleyGame](https://github.com/InALunch/TrolleyGame) by Linchuan Zhang. With his permission. When I decided to learn ClojureScript I needed some interesting project that is not to-do application. I usually was reaching for Conway’s Game of Life in those situations but I had done Game of Life already three times so it was time for something new.
 
-Apart from concept and types of problem I also reused texts written by him. At this point—March 30th, 2018—I don’t have idea how far I will follow the original concept.
+Apart from concept and types of problems I also reused messages from the original game. At this point—March 30th, 2018—I don’t have idea how far I will follow the original concept.
 
 I learned about the game on [Trolley Problem Memes](https://www.facebook.com/TrolleyProblemMemes/) Facebook group. More about the origins of the group can be found in [this interview with its creators](https://www.huffingtonpost.com/linch-zhang/behind-the-absurd-popular_b_10247650.html).
