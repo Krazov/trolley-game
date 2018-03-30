@@ -21,10 +21,10 @@
 
 ;; decisions
 (defn pull-lever? []
-    ["Do you pull the lever? [Yes/No]"])
+    ["Do you pull the lever?"])
 
 (defn keep-playing? []
-    ["Do you want to keep playing? [Yes/No]"])
+    ["Do you want to keep playing?"])
 
 ;; summary
 (defn summary [data]

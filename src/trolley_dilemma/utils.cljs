@@ -3,5 +3,5 @@
 (defn absolute [number]
     (.abs js/Math number))
 
-(defn range-from [from to]
-    (range (- to from)))
+(defn rand-from-to [from to]
+    (+ from (rand-int (- to (inc from)))))
