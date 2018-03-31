@@ -1,4 +1,10 @@
 @import '_reset';
+@import '_mixins';
+@import '_classes';
+
+@z-index-choice: 3;
+@z-index-header: 2;
+@z-index-messages: 1;
 
 :root {
     font-size: 10px;
@@ -6,35 +12,62 @@
 
 body {
     background-color: white;
-    font-family: Calibri, sans-serif;
+    color: black;
+    font-family: 'Open Sans', Calibri, sans-serif;
     font-size: 2rem;
 }
 
 .trolley {
     &-header {
+        .fixed-stretched-top();
+
         background-color: darkcyan;
         color: gainsboro;
-        font-family: Cambria, serif;
         font-size: 3rem;
+        font-weight: 600;
         padding: 3rem;
-        text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+        text-shadow: 2px 2px rgba(0, 0, 0, 0.25);
+        z-index: @z-index-header;
     }
 
     &-messages {
-        line-height: 1.2em;
+        .absolute-stretched();
+
+        background-color: white;
+        bottom: 20rem;
+        line-height: 1.5em;
         padding: 3rem;
+        z-index: @z-index-messages;
+
+        b {
+            font-weight: bold;
+        }
     }
 
     &-choice {
-        bottom: -10rem;
+        background-color: black;
+        bottom: -20rem;
         left: 0;
+        padding: 1.5rem 0;
         position: fixed;
         right: 0;
         text-align: center;
         transition: bottom 250ms ease;
+        z-index: @z-index-choice;
 
         &.is-active {
-            bottom: 2rem;
+            bottom: 0;
+        }
+
+        &-yes {
+            &:extend(.choice-button all);
+
+            background-color: limegreen;
+        }
+        &-no {
+            &:extend(.choice-button all);
+
+            background-color: desaturate(red, 10%);
         }
     }
 }

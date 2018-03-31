@@ -125,34 +125,82 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+input,
+button {
+  font-family: inherit;
+}
+.choice-button,
+.trolley-choice-yes,
+.trolley-choice-no {
+  border: 0 none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-size: 5rem;
+  margin: 0 1rem;
+  padding: 5rem;
+  position: relative;
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+  top: 0;
+  transition: top ease 250ms;
+}
+.choice-button:hover,
+.trolley-choice-yes:hover,
+.trolley-choice-no:hover {
+  top: -1rem;
+}
 :root {
   font-size: 10px;
 }
 body {
   background-color: white;
-  font-family: Calibri, sans-serif;
+  color: black;
+  font-family: 'Open Sans', Calibri, sans-serif;
   font-size: 2rem;
 }
 .trolley-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background-color: darkcyan;
   color: gainsboro;
-  font-family: Cambria, serif;
   font-size: 3rem;
+  font-weight: 600;
   padding: 3rem;
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.25);
+  z-index: 2;
 }
 .trolley-messages {
-  line-height: 1.2em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: white;
+  bottom: 20rem;
+  line-height: 1.5em;
   padding: 3rem;
+  z-index: 1;
+}
+.trolley-messages b {
+  font-weight: bold;
 }
 .trolley-choice {
-  bottom: -10rem;
+  background-color: black;
+  bottom: -20rem;
   left: 0;
+  padding: 1.5rem 0;
   position: fixed;
   right: 0;
   text-align: center;
   transition: bottom 250ms ease;
+  z-index: 3;
 }
 .trolley-choice.is-active {
-  bottom: 2rem;
+  bottom: 0;
+}
+.trolley-choice-yes {
+  background-color: limegreen;
+}
+.trolley-choice-no {
+  background-color: #f20d0d;
 }

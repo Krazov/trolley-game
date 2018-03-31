@@ -1,0 +1,30 @@
+.stretched-horizontally() {
+    left: 0;
+    right: 0;
+}
+.stretched-horizontally-top() {
+    top: 0;
+   .stretched-horizontally();
+}
+.stretched-horizontally-bottom() {
+    bottom: 0;
+   .stretched-horizontally();
+}
+
+.fixed-stretched-top() {
+    position: fixed;
+    .stretched-horizontally-top();
+}
+
+.absolute-stretched() {
+    position: absolute;
+    .stretched-horizontally();
+}
+.absolute-stretched-top() {
+    position: absolute;
+    .stretched-horizontally-top();
+}
+.absolute-stretched-bottom() {
+    position: absolute;
+    .stretched-horizontally-bottom();
+}
