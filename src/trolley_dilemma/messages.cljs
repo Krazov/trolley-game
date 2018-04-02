@@ -11,24 +11,6 @@
 (defn generate-message [message]
     {:id (reset! message-count (inc @message-count)) :message message})
 
-;; dilemmas
-(defn real-trolley [lowertrack uppertrack]
-    ["---"
-     (str
-         "A runaway trolley is barrelling towards "
-         (case lowertrack
-             0 "no workers who would be"
-             1 "one worker who is"
-             (str lowertrack " workers who are"))
-         " mysteriously tied up.")
-     (str
-         "You can pull a lever to divert the trolley to another track, containting "
-         (case uppertrack
-             0 "no workers who would be"
-             1 "one worker who is also"
-             (str uppertrack " workers who are also"))
-         " tied up.")])
-
 ;; decisions
 (defn pull-lever? []
     ["---" "Do you pull the lever?"])

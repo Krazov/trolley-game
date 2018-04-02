@@ -2,6 +2,7 @@
     (:require
         [reagent.core :as r]
         [trolley-dilemma.dilemmas :as d]
+        [trolley-dilemma.dilemmas.real-trolley :as rt]
         [trolley-dilemma.messages :as m]
         [trolley-dilemma.consequences :as c]
         [trolley-dilemma.views :as v]))
@@ -17,6 +18,10 @@
                               :weight nil}))
 
 (defonce current-dilemma (r/atom nil))
+
+(defonce decision (r/atom nil))
+
+(defonce result (r/atom nil))
 
 (defonce stage (r/atom nil))
 
@@ -47,12 +52,12 @@
 
 (defn create-real-trolley []
     (let
-        [data (d/real-trolley)
+        [data (rt/generate)
          lowertrack (:lowertrack data)
          uppertrack (:uppertrack data)]
         (do
             (reset! current-dilemma data)
-            (m/real-trolley lowertrack uppertrack))))
+            (rt/instruction lowertrack uppertrack))))
 
 (defn update-player-data [decision]
     (let
@@ -66,12 +71,15 @@
         :decision? (m/pull-lever?)
         :decision-yes (m/lever-pulled)
         :decision-no (m/lever-left)
-        :results ["---" "This is what you have done"]
+        :results (rt/summary @current-dilemma @decision)
         :update (m/summary @player-data)
         :quit? (m/keep-playing?)
         :quit-yes (m/keep-playing)
         :quit-no (m/stop-playing)
         nil))
+
+(defn add-message [stage]
+    (swap! messages into (map m/generate-message (create-message stage))))
 
 ; todo: multi method with empty getting current round
 (defn listen-time? [stage]
@@ -86,8 +94,9 @@
         (do
             (when (= stage :dilemma)
                 (swap! player-data assoc :rounds (inc (:rounds @player-data))))
+            (when (= stage :calculate) (println "Calculation happens now"))
             (when-not (= stage :calculate)
-                (swap! messages into (map m/generate-message (create-message stage))))
+                (add-message stage))
             (when (listen-time? stage)
                 (do
                     (reset! listen? true)))
@@ -101,22 +110,20 @@
     (do
         (when (= @stage :decision?)
             (do
-                (swap! messages into (map m/generate-message (create-message :decision-yes)))
-                (swap! messages into (map m/generate-message (create-message :results)))
-                (update-player-data :yes)))
+                (add-message :decision-yes)
+                (reset! decision :yes)))
         (when (= @stage :quit?)
-            (swap! messages into (map m/generate-message (create-message :quit-yes))))
+            (add-message :quit-yes))
         (play)))
 
 (defn no []
     (do
         (when (= @stage :decision?)
             (do
-                (swap! messages into (map m/generate-message (create-message :decision-no)))
-                (update-player-data :no)
-                (println @player-data)))
+                (add-message :decision-no)
+                (reset! decision :no)))
         (when (= @stage :quit?)
-            (swap! messages into (map m/generate-message (create-message :quit-no))))
+            (add-message :quit-no))
         (js/setTimeout play 1000)))
 
 ;; -------------------------

@@ -1,11 +1,7 @@
 (ns trolley-dilemma.dilemmas
     (:require
-        [trolley-dilemma.utils :as u]))
-
-(defn real-trolley []
-    {:type :real-trolley
-     :uppertrack (u/rand-from-to 0 5)
-     :lowertrack (u/rand-from-to 1 10)})
+        [trolley-dilemma.utils :as u]
+        [trolley-dilemma.dilemmas.real-trolley :as rt]))
 
 (defn fat-man []
     {:type :fat-man
@@ -13,7 +9,7 @@
 
 (defn murderer-liar []
     {:type :murderer-liar
-     :friends (u/rand-from 2 10)
+     :friends (u/rand-from-to 2 10)
      :entropy 0.1})
 
 (defn harambe-trolley []
