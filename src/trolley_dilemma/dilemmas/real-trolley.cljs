@@ -16,7 +16,7 @@
          diff (- lowertrack uppertrack)
          absolute-diff (u/absolute diff)]
         (cond
-            ; there is one more case to cover for "multi" choice but there is no interface for it yet (esc key?)
+            (and (< diff 0) (= decision :multi)) {:decision :worst, :points (+ lowertrack uppertrack)}; not implemented in UI so far
             (and (< diff 0) (= decision :yes)) {:decision :wrong, :points absolute-diff}
             (= lowertrack uppertrack) {:decision :neutral, :points 0}
             (or
@@ -31,6 +31,8 @@
             (and (= decision :yes) (> diff 0)) {:decision :lives-saved, :points 1}
             :else {:decision :murderer, :points -10})))
 
+(defn summarize [dilemma decision]
+    (assoc {} :utils (summarize-utils dilemma decision) :kantpoints (summarize-kantpoints dilemma decision)))
 
 ; create text messages for dilemma
 (defn instruction [lowertrack uppertrack]
@@ -50,15 +52,16 @@
              (str uppertrack " workers who are also"))
          " tied up.")])
 
-(defn summary [dilemma decision]
+(defn summary [result]
     (let
-        [utils (summarize-utils dilemma decision)
-         kantpoints (summarize-kantpoints dilemma decision)]
+        [utils (:utils result)
+         utilpoints (:points utils)
+         kantpoints (:kantpoints result)]
         ["---"
          (case (:decision utils)
-             :wrong (str "You have made the wrong utilitarian decision. Lose " (:points utils) " util" (u/plural? (:points utils)) "!")
+             :wrong (str "You have made the wrong utilitarian decision. Lose " utilpoints " util" (u/plural? utilpoints) "!")
              :neutral "Your choice is neutral on utilitarian grounds."
-             :correct (str "You have made the correct utilitarian decision and saved a net " (:points utils) (u/plural? (:points utils) " life" " lives") "."))
+             :correct (str "You have made the correct utilitarian decision and saved a net " utilpoints (u/plural? utilpoints " life" " lives") "."))
          (case (:decision kantpoints)
              :default "The dilemma is not your problem. On Kantian grounds, that is enough. There is no change in your Kant points. #NotYourProblem."
              :lives-saved "You have a hypothetical imperative to save lives, but not a categorical one. Gain 1 Kant point."

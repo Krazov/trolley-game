@@ -4,7 +4,6 @@
         [trolley-dilemma.dilemmas :as d]
         [trolley-dilemma.dilemmas.real-trolley :as rt]
         [trolley-dilemma.messages :as m]
-        [trolley-dilemma.consequences :as c]
         [trolley-dilemma.views :as v]))
 
 (enable-console-print!)
@@ -27,7 +26,7 @@
 
 (defonce listen? (r/atom false))
 
-(defonce messages (r/atom [{:id      (:rounds @player-data)
+(defonce messages (r/atom [{:id (:rounds @player-data)
                             :message "Welcome to Trolley Dilemma: The Game"}]))
 
 ;; -------------------------
@@ -59,19 +58,13 @@
             (reset! current-dilemma data)
             (rt/instruction lowertrack uppertrack))))
 
-(defn update-player-data [decision]
-    (let
-        [data @player-data
-         type (:type @current-dilemma)]
-        (reset! player-data (c/consequences? type data decision))))
-
 (defn create-message [stage]
     (case stage
         :dilemma (create-real-trolley)
         :decision? (m/pull-lever?)
         :decision-yes (m/lever-pulled)
         :decision-no (m/lever-left)
-        :results (rt/summary @current-dilemma @decision)
+        :results (rt/summary @result)
         :update (m/summary @player-data)
         :quit? (m/keep-playing?)
         :quit-yes (m/keep-playing)
@@ -81,7 +74,6 @@
 (defn add-message [stage]
     (swap! messages into (map m/generate-message (create-message stage))))
 
-; todo: multi method with empty getting current round
 (defn listen-time? [stage]
     (or
         (= stage :quit?)
@@ -89,29 +81,29 @@
 
 (defn play []
     (let
-        [next-stage (get-next-round @stage)
-         stage (reset! stage next-stage)]
-        (do
-            (when (= stage :dilemma)
-                (swap! player-data assoc :rounds (inc (:rounds @player-data))))
-            (when (= stage :calculate) (println "Calculation happens now"))
-            (when-not (= stage :calculate)
-                (add-message stage))
-            (when (listen-time? stage)
-                (do
-                    (reset! listen? true)))
-            (when-not (listen-time? stage)
-                (do
-                    (reset! listen? false)
-                    (js/setTimeout play 1000)))
-            )))
+        [stage (reset! stage (get-next-round @stage))]
+        (when (= stage :dilemma)
+            (swap! player-data assoc :rounds (inc (:rounds @player-data))))
+        (when (= stage :calculate)
+            (reset! result (rt/summarize @current-dilemma @decision))
+            (swap! player-data assoc
+                   :utils (+ (:utils @player-data) (:points (:utils @result)))
+                   :kantpoints (+ (:kantpoints @player-data) (:points (:kantpoints @result)))))
+        (when-not (= stage :calculate)
+            (add-message stage))
+        (when (listen-time? stage)
+            (reset! listen? true))
+        (when-not (listen-time? stage)
+            (reset! listen? false)
+            ; TODO: vary the time depending on the stage
+            (js/setTimeout play 1000))
+        ))
 
 (defn yes []
     (do
         (when (= @stage :decision?)
-            (do
-                (add-message :decision-yes)
-                (reset! decision :yes)))
+            (add-message :decision-yes)
+            (reset! decision :yes))
         (when (= @stage :quit?)
             (add-message :quit-yes))
         (play)))
@@ -119,12 +111,11 @@
 (defn no []
     (do
         (when (= @stage :decision?)
-            (do
-                (add-message :decision-no)
-                (reset! decision :no)))
+            (add-message :decision-no)
+            (reset! decision :no))
         (when (= @stage :quit?)
             (add-message :quit-no))
-        (js/setTimeout play 1000)))
+        (play)))
 
 ;; -------------------------
 ;; initialize app
