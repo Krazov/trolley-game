@@ -7,9 +7,14 @@
 (defn plural? [number]
     (if (< 1 (u/absolute number)) "s" ""))
 
-(defonce message-count (r/atom 0))
-(defn generate-message [message]
-    {:id (reset! message-count (inc @message-count)) :message message})
+(defn- create-generate-message []
+    (let
+        [message-count (r/atom 0)]
+        (fn [message]
+            {:id (reset! message-count (inc @message-count))
+             :message message})))
+
+(defonce generate-message (create-generate-message))
 
 ;; decisions
 (defn pull-lever? []
